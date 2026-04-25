@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Socio-Economic Survey Portal | Household Assessment System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #eef2f5;
+            font-family: 'Inter', sans-serif;
+            padding: 2rem 1.5rem;
+            color: #1e2a3e;
+        }
+
+        .survey-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* header */
+        .survey-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .survey-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #0f4c5c, #2c7a4d);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -0.3px;
+        }
+        .survey-header p {
+            color: #5a6e7c;
+            margin-top: 0.5rem;
+            font-size: 0.95rem;
+        }
+        .badge {
+            background: #d4e6f1;
+            display: inline-block;
+            padding: 0.2rem 1rem;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #1a5276;
+            margin-top: 0.6rem;
+        }
+
+        /* main two column layout */
+        .dashboard-split {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        /* left: survey form */
+        .form-panel {
+            flex: 2;
+            min-width: 300px;
+            background: white;
+            border-radius: 1.75rem;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05), 0 2px 6px rgba(0,0,0,0.02);
+            padding: 1.8rem;
+            border: 1px solid #e2edf2;
+        }
+
+        .form-section {
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #e9edf2;
+            padding-bottom: 1.5rem;
+        }
+        .form-section:last-child {
+            border-bottom: none;
+        }
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            color: #1e4663;
+        }
+        .section-title i {
+            color: #2c7a4d;
+            font-size: 1.1rem;
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.2rem;
+        }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+        .input-group label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #2c3e50;
+            letter-spacing: 0.3px;
+        }
+        .input-group input, .input-group select, .input-group textarea {
+            padding: 0.7rem 0.9rem;
+            border: 1px solid #cfdfe8;
+            border-radius: 1rem;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            transition: 0.2s;
+            background: #fefefe;
+        }
+        .input-group input:focus, .input-group select:focus, .input-group textarea:focus {
+            outline: none;
+            border-color: #2c7a4d;
+            box-shadow: 0 0 0 3px rgba(44,122,77,0.1);
+        }
+        .radio-group {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-top: 0.3rem;
+        }
+        .radio-group label {
+            font-weight: normal;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.85rem;
+        }
+        small.hint {
+            font-size: 0.7rem;
+            color: #7c8f9c;
+        }
+
+        /* right panel: records / statistics */
+        .stats-panel {
+            flex: 1.3;
+            min-width: 300px;
+            background: white;
+            border-radius: 1.75rem;
+            padding: 1.8rem;
+            border: 1px solid #e2edf2;
+            display: flex;
+            flex-direction: column;
+            gap: 1.8rem;
+        }
+        .summary-card {
+            background: #f8fafc;
+            border-radius: 1.5rem;
+            padding: 1rem 1.2rem;
+            border-left: 4px solid #2c7a4d;
+        }
+        .summary-card h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        .stat-numbers {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+        }
+        .stat-item {
+            text-align: center;
+            background: white;
+            border-radius: 1rem;
+            padding: 0.5rem 0.8rem;
+            flex: 1;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+        }
+        .stat-value {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #1e4663;
+        }
+        .stat-label {
+            font-size: 0.7rem;
+            color: #6c869b;
+        }
+        .household-list {
+            max-height: 360px;
+            overflow-y: auto;
+        }
+        .household-item {
+            background: #ffffff;
+            border-radius: 1.2rem;
+            padding: 0.9rem;
+            margin-bottom: 0.8rem;
+            border: 1px solid #e2edf2;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .household-item:hover {
+            background: #f1f6f9;
+            border-color: #bdd3e2;
+        }
+        .hh-name {
+            font-weight: 700;
+            display: flex;
+            justify-content: space-between;
+        }
+        .hh-details {
+            font-size: 0.7rem;
+            color: #5b7a95;
+            margin-top: 0.3rem;
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+        .btn-action {
+            background: #2c7a4d;
+            border: none;
+            color: white;
+            padding: 0.7rem 1rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.2s;
+            width: 100%;
+            margin-top: 0.3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #1e4663;
+        }
+        .btn-danger {
+            background: #c9423a;
+        }
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .inline-flex {
+            display: flex;
+            gap: 0.6rem;
+        }
+        .alert-message {
+            background: #fef5e7;
+            border-radius: 1rem;
+            padding: 0.7rem;
+            font-size: 0.8rem;
+            color: #b65f22;
+            margin-top: 0.5rem;
+            text-align: center;
+        }
+        footer {
+            margin-top: 2rem;
+            text-align: center;
+            font-size: 0.7rem;
+            color: #8ba0ae;
+        }
+        @media (max-width: 780px) {
+            body { padding: 1rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="survey-container">
+    <div class="survey-header">
+        <h1><i class="fas fa-chart-line"></i> Socio-Economic Household Survey</h1>
+        <p>National Development & Welfare Assessment — Secure Data Entry Platform</p>
+        <div class="badge"><i class="fas fa-database"></i> Real-time analytics | Household registry</div>
+    </div>
+
+    <div class="dashboard-split">
+        <!-- LEFT: DATA ENTRY FORM -->
+        <div class="form-panel">
+            <form id="surveyForm">
+                <!-- household info -->
+                <div class="form-section">
+                    <div class="section-title"><i class="fas fa-home"></i> Household Information</div>
+                    <div class="form-grid">
+                        <div class="input-group">
+                            <label>Head of Family *</label>
+                            <input type="text" id="headName" placeholder="Full name" required>
+                        </div>
+                        <div class="input-group">
+                            <label>Contact Number</label>
+                            <input type="tel" id="contact" placeholder="Mobile number">
+                        </div>
+                        <div class="input-group">
+                            <label>Village / Ward *</label>
+                            <input type="text" id="village" placeholder="e.g., Madhugram" required>
+                        </div>
+                        <div class="input-group">
+                            <label>District *</label>
+                            <input type="text" id="district" placeholder="District name" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Demographics -->
+                <div class="form-section">
+                    <div class="section-title"><i class="fas fa-users"></i> Demographics & Family</div>
+                    <div class="form-grid">
+                        <div class="input-group">
+                            <label>Total Family Members *</label>
+                            <input type="number" id="familySize" min="1" value="2" required>
+                        </div>
+                        <div class="input-group">
+                            <label>Number of Children (< 14 yrs)</label>
+                            <input type="number" id="childrenCount" min="0" value="0">
+                        </div>
+                        <div class="input-group">
+                            <label>Elderly Members (60+ yrs)</label>
+                            <input type="number" id="elderlyCount" min="0" value="0">
+                        </div>
+                        <div class="input-group">
+                            <label>Primary Occupation *</label>
+                            <select id="occupation">
+                                <option value="Farmer">Farmer / Agriculture</option>
+                                <option value="Labor">Daily Wage Labor</option>
+                                <option value="Salaried">Salaried Employee</option>
+                                <option value="Business">Small Business</option>
+                                <option value="Unemployed">Unemployed / Seeking</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Economic indicators -->
+                <div class="form-section">
+                    <div class="section-title"><i class="fas fa-coins"></i> Economic Indicators</div>
+                    <div class="form-grid">
+                        <div class="input-group">
+                            <label>Annual Household Income (₹) *</label>
+                            <input type="number" id="annualIncome" placeholder="e.g., 240000" value="240000" required>
+                        </div>
+                        <div class="input-group">
+                            <label>Housing Type</label>
+                            <select id="housingType">
+                                <option value="Pucca">Pucca (Concrete)</option>
+                                <option value="Semi-pucca">Semi-pucca</option>
+                                <option value="Kutcha">Kutcha / Temporary</option>
+                                <option value="Slum">Slum / Informal</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label>Sanitation Facility</label>
+                            <select id="sanitation">
+                                <option value="Flush">Flush Toilet</option>
+                                <option value="Pit">Pit Latrine</option>
+                                <option value="Open">Open Defecation</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label>LPG / Clean Fuel</label>
+                            <select id="cleanFuel">
+                                <option value="Yes">Yes (LPG/PNG)</option>
+                                <option value="No">No (Biomass/Coal)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-grid" style="margin-top: 0.8rem;">
+                        <div class="input-group">
+                            <label>Bank Account (Jan Dhan / others)</label>
+                            <div class="radio-group">
+                                <label><input type="radio" name="bankAccount" value="Yes" checked> Yes</label>
+                                <label><input type="radio" name="bankAccount" value="No"> No</label>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label>Electricity Connection</label>
+                            <div class="radio-group">
+                                <label><input type="radio" name="electricity" value="Yes" checked> Yes</label>
+                                <label><input type="radio" name="electricity" value="No"> No</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- social schemes -->
+                <div class="form-section">
+                    <div class="section-title"><i class="fas fa-hand-holding-heart"></i> Social Security & Schemes</div>
+                    <div class="form-grid">
+                        <div class="input-group">
+                            <label>Ration Card (NFSA)</label>
+                            <select id="rationCard">
+                                <option value="Yes">Yes (Priority/AAY)</option>
+                                <option value="No">No</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label>Health Insurance (PM-JAY / state)</label>
+                            <select id="healthInsurance">
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label>Any Disability in family</label>
+                            <select id="disability">
+                                <option value="No">No</option>
+                                <option value="Yes">Yes</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Additional Notes / Vulnerability</label>
+                        <textarea id="notes" rows="2" placeholder="e.g., single woman household, landless, migrant worker..."></textarea>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button type="submit" class="btn-action"><i class="fas fa-save"></i> Save Household Data</button>
+                    <button type="button" id="resetFormBtn" class="btn-action btn-secondary"><i class="fas fa-undo-alt"></i> Reset Form</button>
+                </div>
+                <div id="formFeedback" class="alert-message" style="display: none;"></div>
+            </form>
+        </div>
+
+        <!-- RIGHT: STATISTICS + HOUSEHOLD REGISTRY -->
+        <div class="stats-panel">
+            <div class="summary-card">
+                <h3><i class="fas fa-chart-pie"></i> Live Dashboard</h3>
+                <div class="stat-numbers">
+                    <div class="stat-item"><div class="stat-value" id="totalHouseholds">0</div><div class="stat-label">Households</div></div>
+                    <div class="stat-item"><div class="stat-value" id="avgIncome">₹0</div><div class="stat-label">Avg Income</div></div>
+                    <div class="stat-item"><div class="stat-value" id="totalMembers">0</div><div class="stat-label">Total Population</div></div>
+                </div>
+                <div class="stat-numbers" style="margin-top: 0.6rem;">
+                    <div class="stat-item"><div class="stat-value" id="belowPovertyLine">0</div><div class="stat-label">BPL (Income < ₹50k)</div></div>
+                    <div class="stat-item"><div class="stat-value" id="cleanFuelCoverage">0%</div><div class="stat-label">Clean Fuel %</div></div>
+                </div>
+            </div>
+
+            <div>
+                <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.8rem;">
+                    <h3 style="font-size: 1rem;"><i class="fas fa-address-book"></i> Registered Households</h3>
+                    <button id="deleteAllBtn" style="background: none; border: none; color:#b91c1c; font-size:0.7rem; cursor:pointer;"><i class="fas fa-trash-alt"></i> Clear All</button>
+                </div>
+                <div id="householdListContainer" class="household-list">
+                    <div style="text-align: center; padding: 2rem; color: #94a3b8;">No household data yet.<br> Fill form and save.</div>
+                </div>
+                <button id="exportCsvBtn" class="btn-action btn-secondary" style="margin-top: 1rem;"><i class="fas fa-download"></i> Export CSV (Survey Data)</button>
+            </div>
+        </div>
+    </div>
+    <footer><i class="fas fa-chart-simple"></i> Socio-Economic Survey System · Data stored locally (demo) · privacy-first design</footer>
+</div>
+
+<script>
+    // ---------- STORAGE ----------
+    let households = [];   // each entry object
+
+    // Load from localStorage
+    function loadFromStorage() {
+        const stored = localStorage.getItem('socioEconomicSurvey');
+        if (stored) {
+            try {
+                households = JSON.parse(stored);
+            } catch(e) { households = []; }
+        } else {
+            // insert demo sample households for illustration
+            households = [
+                {
+                    id: "hh_" + Date.now() + "_1",
+                    headName: "Ramesh Kumar",
+                    contact: "9876543210",
+                    village: "Bela Nagar",
+                    district: "Samastipur",
+                    familySize: 5,
+                    childrenCount: 2,
+                    elderlyCount: 1,
+                    occupation: "Farmer",
+                    annualIncome: 42000,
+                    housingType: "Kutcha",
+                    sanitation: "Pit",
+                    cleanFuel: "No",
+                    bankAccount: "Yes",
+                    electricity: "No",
+                    rationCard: "Yes",
+                    healthInsurance: "No",
+                    disability: "No",
+                    notes: "Marginal farmer, drought prone area"
+                },
+                {
+                    id: "hh_" + Date.now() + "_2",
+                    headName: "Sunita Devi",
+                    contact: "9988776655",
+                    village: "Madhugram",
+                    district: "Vaishali",
+                    familySize: 3,
+                    childrenCount: 1,
+                    elderlyCount: 0,
+                    occupation: "Labor",
+                    annualIncome: 62000,
+                    housingType: "Semi-pucca",
+                    sanitation: "Flush",
+                    cleanFuel: "Yes",
+                    bankAccount: "Yes",
+                    electricity: "Yes",
+                    rationCard: "Yes",
+                    healthInsurance: "Yes",
+                    disability: "No",
+                    notes: "Widow, MGNREGS job card holder"
+                },
+                {
+                    id: "hh_" + Date.now() + "_3",
+                    headName: "Amit Sharma",
+                    contact: "8899001122",
+                    village: "Civil Lines",
+                    district: "Jaipur",
+                    familySize: 4,
+                    childrenCount: 2,
+                    elderlyCount: 0,
+                    occupation: "Salaried",
+                    annualIncome: 480000,
+                    housingType: "Pucca",
+                    sanitation: "Flush",
+                    cleanFuel: "Yes",
+                    bankAccount: "Yes",
+                    electricity: "Yes",
+                    rationCard: "No",
+                    healthInsurance: "Yes",
+                    disability: "No",
+                    notes: "Urban middle class"
+                }
+            ];
+            saveToStorage();
+        }
+        renderAll();
+    }
+
+    function saveToStorage() {
+        localStorage.setItem('socioEconomicSurvey', JSON.stringify(households));
+    }
+
+    // generate unique ID
+    function generateId() {
+        return 'hh_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
+    }
+
+    // get current form data as object
+    function getFormData() {
+        const bankAccount = document.querySelector('input[name="bankAccount"]:checked')?.value || "Yes";
+        const electricity = document.querySelector('input[name="electricity"]:checked')?.value || "Yes";
+        return {
+            headName: document.getElementById('headName').value.trim(),
+            contact: document.getElementById('contact').value.trim(),
+            village: document.getElementById('village').value.trim(),
+            district: document.getElementById('district').value.trim(),
+            familySize: parseInt(document.getElementById('familySize').value) || 1,
+            childrenCount: parseInt(document.getElementById('childrenCount').value) || 0,
+            elderlyCount: parseInt(document.getElementById('elderlyCount').value) || 0,
+            occupation: document.getElementById('occupation').value,
+            annualIncome: parseFloat(document.getElementById('annualIncome').value) || 0,
+            housingType: document.getElementById('housingType').value,
+            sanitation: document.getElementById('sanitation').value,
+            cleanFuel: document.getElementById('cleanFuel').value,
+            bankAccount: bankAccount,
+            electricity: electricity,
+            rationCard: document.getElementById('rationCard').value,
+            healthInsurance: document.getElementById('healthInsurance').value,
+            disability: document.getElementById('disability').value,
+            notes: document.getElementById('notes').value,
+        };
+    }
+
+    function validateFormData(data) {
+        if (!data.headName || !data.village || !data.district) return "Head of Family, Village & District are required.";
+        if (data.familySize < 1) return "Family size must be at least 1.";
+        if (data.annualIncome < 0) return "Income cannot be negative.";
+        return null;
+    }
+
+    // Add/Update logic (since we are not editing by default, we use simple insert)
+    function addHousehold(entry) {
+        const newEntry = { id: generateId(), ...entry };
+        households.unshift(newEntry); // latest on top
+        saveToStorage();
+        renderAll();
+        return newEntry;
+    }
+
+    // delete all
+    function deleteAllHouseholds() {
+        if (confirm("⚠️ Delete ALL household records? This action cannot be undone.")) {
+            households = [];
+            saveToStorage();
+            renderAll();
+            showFormFeedback("All records deleted successfully.", "#2c7a4d");
+        }
+    }
+
+    // delete single household
+    function deleteHousehold(id) {
+        households = households.filter(hh => hh.id !== id);
+        saveToStorage();
+        renderAll();
+        showFormFeedback("Household removed.", "#b85c1a");
+    }
+
+    // update statistics + household list
+    function renderAll() {
+        renderHouseholdList();
+        renderStatistics();
+    }
+
+    function renderHouseholdList() {
+        const container = document.getElementById('householdListContainer');
+        if (!households.length) {
+            container.innerHTML = `<div style="text-align: center; padding: 2rem; color: #94a3b8;"><i class="fas fa-folder-open"></i> No households registered.<br> Fill the form to begin.</div>`;
+            return;
+        }
+        container.innerHTML = '';
+        households.forEach(hh => {
+            const div = document.createElement('div');
+            div.className = 'household-item';
+            div.innerHTML = `
+                <div class="hh-name">
+                    <strong><i class="fas fa-user"></i> ${escapeHtml(hh.headName)}</strong>
+                    <button class="delete-single" data-id="${hh.id}" style="background:none; border:none; color:#b91c1c; cursor:pointer;"><i class="fas fa-trash"></i></button>
+                </div>
+                <div class="hh-details">
+                    <span><i class="fas fa-map-marker-alt"></i> ${escapeHtml(hh.village)}, ${escapeHtml(hh.district)}</span>
+                    <span><i class="fas fa-rupee-sign"></i> ${formatIncome(hh.annualIncome)}/yr</span>
+                    <span><i class="fas fa-users"></i> ${hh.familySize} members</span>
+                    <span>${hh.occupation}</span>
+                </div>
+                <div class="hh-details" style="font-size:0.65rem; color:#2c7a4d;">
+                    ${hh.cleanFuel === 'Yes' ? '✅ LPG/Clean Fuel' : '⚠️ Solid Fuel'} | ${hh.bankAccount === 'Yes' ? '🏦 Banked' : '❌ No Bank'} | ${hh.electricity === 'Yes' ? '⚡ Electrified' : '🔌 No Grid'}
+                </div>
+            `;
+            container.appendChild(div);
+        });
+        // attach delete events
+        document.querySelectorAll('.delete-single').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const id = btn.getAttribute('data-id');
+                deleteHousehold(id);
+            });
+        });
+    }
+
+    function renderStatistics() {
+        const totalHouseholds = households.length;
+        const totalMembers = households.reduce((sum, h) => sum + (h.familySize || 0), 0);
+        const totalIncome = households.reduce((sum, h) => sum + (h.annualIncome || 0), 0);
+        const avgIncome = totalHouseholds ? (totalIncome / totalHouseholds) : 0;
+        // BPL count (annual income below ₹50,000)
+        const belowPoverty = households.filter(h => (h.annualIncome || 0) < 50000).length;
+        // clean fuel coverage %
+        const cleanFuelCount = households.filter(h => h.cleanFuel === 'Yes').length;
+        const cleanFuelPercent = totalHouseholds ? Math.round((cleanFuelCount / totalHouseholds) * 100) : 0;
+
+        document.getElementById('totalHouseholds').innerText = totalHouseholds;
+        document.getElementById('avgIncome').innerText = `₹${Math.round(avgIncome).toLocaleString()}`;
+        document.getElementById('totalMembers').innerText = totalMembers;
+        document.getElementById('belowPovertyLine').innerText = belowPoverty;
+        document.getElementById('cleanFuelCoverage').innerText = `${cleanFuelPercent}%`;
+    }
+
+    function formatIncome(income) {
+        if (income >= 100000) return (income/100000).toFixed(1) + 'L';
+        return income.toLocaleString();
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    function showFormFeedback(msg, bgHint = "#fef5e7") {
+        const feedbackDiv = document.getElementById('formFeedback');
+        feedbackDiv.style.display = 'block';
+        feedbackDiv.innerHTML = `<i class="fas fa-info-circle"></i> ${msg}`;
+        feedbackDiv.style.backgroundColor = bgHint;
+        setTimeout(() => {
+            feedbackDiv.style.display = 'none';
+        }, 3000);
+    }
+
+    // reset form fields to default values
+    function resetForm() {
+        document.getElementById('headName').value = '';
+        document.getElementById('contact').value = '';
+        document.getElementById('village').value = '';
+        document.getElementById('district').value = '';
+        document.getElementById('familySize').value = '2';
+        document.getElementById('childrenCount').value = '0';
+        document.getElementById('elderlyCount').value = '0';
+        document.getElementById('occupation').value = 'Farmer';
+        document.getElementById('annualIncome').value = '240000';
+        document.getElementById('housingType').value = 'Pucca';
+        document.getElementById('sanitation').value = 'Flush';
+        document.getElementById('cleanFuel').value = 'Yes';
+        document.querySelector('input[name="bankAccount"][value="Yes"]').checked = true;
+        document.querySelector('input[name="electricity"][value="Yes"]').checked = true;
+        document.getElementById('rationCard').value = 'Yes';
+        document.getElementById('healthInsurance').value = 'No';
+        document.getElementById('disability').value = 'No';
+        document.getElementById('notes').value = '';
+        showFormFeedback("Form has been reset.", "#e2e8f0");
+    }
+
+    // Handle form submission
+    function onFormSubmit(e) {
+        e.preventDefault();
+        const formData = getFormData();
+        const validationError = validateFormData(formData);
+        if (validationError) {
+            showFormFeedback(validationError, "#ffe6e6");
+            return;
+        }
+        addHousehold(formData);
+        // reset only a few fields but keep ease: clear required fields after save
+        document.getElementById('headName').value = '';
+        document.getElementById('contact').value = '';
+        document.getElementById('village').value = '';
+        document.getElementById('district').value = '';
+        document.getElementById('notes').value = '';
+        showFormFeedback("✅ Household record added successfully!", "#e6f7e6");
+        // scroll to list
+        document.querySelector('.stats-panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // Export to CSV
+    function exportToCSV() {
+        if (households.length === 0) {
+            alert("No data to export. Please add households first.");
+            return;
+        }
+        const headers = ["ID","Head Name","Contact","Village","District","Family Size","Children","Elderly","Occupation","Annual Income","Housing","Sanitation","Clean Fuel","Bank Account","Electricity","Ration Card","Health Insurance","Disability","Notes"];
+        const rows = households.map(h => [
+            h.id, `"${escapeCsv(h.headName)}"`, `"${escapeCsv(h.contact)}"`, `"${escapeCsv(h.village)}"`, `"${escapeCsv(h.district)}"`,
+            h.familySize, h.childrenCount, h.elderlyCount, h.occupation, h.annualIncome, h.housingType, h.sanitation, h.cleanFuel,
+            h.bankAccount, h.electricity, h.rationCard, h.healthInsurance, h.disability, `"${escapeCsv(h.notes)}"`
+        ].join(","));
+        const csvContent = [headers.join(","), ...rows].join("\n");
+        const blob = new Blob(["\uFEFF" + csvContent], { type: "text/csv;charset=utf-8;" });
+        const link = document.createElement("a");
+        const url = URL.createObjectURL(blob);
+        link.href = url;
+        link.setAttribute("download", "socio_economic_survey.csv");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        showFormFeedback("CSV export complete!", "#d4edda");
+    }
+
+    function escapeCsv(str) {
+        if (!str) return '';
+        return str.replace(/"/g, '""');
+    }
+
+    // event listeners
+    document.getElementById('surveyForm').addEventListener('submit', onFormSubmit);
+    document.getElementById('resetFormBtn').addEventListener('click', resetForm);
+    document.getElementById('deleteAllBtn').addEventListener('click', deleteAllHouseholds);
+    document.getElementById('exportCsvBtn').addEventListener('click', exportToCSV);
+
+    // initial load
+    loadFromStorage();
+</script>
+</body>
+</html>
